@@ -1,8 +1,11 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 
-const Track = ({ source, target, getTrackProps }) => {
-    console.log('min', source.value)
-    console.log('max', target.value)
+const Track = ({ source, target, getTrackProps, updateChosenMinPrice, updateChosenMaxPrice }) => {
+    
+    useEffect(() => {
+        updateChosenMinPrice(source.value)
+        updateChosenMaxPrice(target.value)
+    }, [source, target, updateChosenMinPrice, updateChosenMaxPrice])
     return (
         <div
             style={{
