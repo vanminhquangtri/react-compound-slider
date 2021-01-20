@@ -2,7 +2,6 @@ import React from 'react';
 import ReactTooltip from 'react-tooltip';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons'
-console.log('FontAwesomeIcon :>> ', FontAwesomeIcon);
 
 const Tooltips = () => {
     return (

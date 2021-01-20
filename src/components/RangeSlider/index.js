@@ -49,7 +49,6 @@ const RangeSlider = () => {
             }
         })
     }, [maxPrice, price])
-    console.log('ordersList :>> ', ordersList?.data?.data);
     return (
         maxPrice ? (
             <>
