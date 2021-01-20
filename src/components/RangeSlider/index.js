@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Slider, Handles, Tracks, Rail } from 'react-compound-slider'
-import { getOrders, getSetting } from '../../api'
+import { getOrders, getSetting } from 'api'
 import Handle from './components/Handle'
 // import Tick from './components/Tick'
 import Track from './components/Track'
@@ -23,15 +23,12 @@ const railStyle = {
 }
 const RangeSlider = () => {
     const [maxPrice, setMaxPrice] = useState()
-    const [maxProduct, setMaxProduct] = useState()
+    const [price, setPrice] = useState([]) // price range: [min, max]
     const [ordersList, setOrderList] = useState()
-    const [chosenMinPrice, setChosenMinPrice] = useState()
-    const [chosenMaxPrice, setChosenMaxPrice] = useState()
     const handleSetting = async () => {
         getSetting('max_value').then((res) => {
             if (res) {
                 setMaxPrice(res.data.data[0].setting.max_total_price)
-                setMaxProduct(res.data.data[0].setting.max_total_product)
             }
         })
     }
@@ -39,54 +36,31 @@ const RangeSlider = () => {
         handleSetting()
     }, [])
 
-    const updateChosenMinPrice = (value) => {
-        setChosenMinPrice(() => parseInt(value.toFixed()))
-    }
-
-    const updateChosenMaxPrice = (value) => {
-        setChosenMaxPrice(() => parseInt(value.toFixed()))
-    }
-
-    const handleGetOrder = () => {
-        const data = {
-            total_price: {
-                "begin": chosenMinPrice,
-                "end": chosenMaxPrice,
-            }
-        }
-        getOrders({
-            total_price: {
-                "begin": chosenMinPrice,
-                "end": chosenMaxPrice,
-            }
-        }).then((res) => {
-            if (res) {
-                setOrderList(res)
-            }
-        })
-    }
-
     useEffect(() => {
         const data = {
             total_price: {
-                "begin": chosenMinPrice,
-                "end": chosenMaxPrice,
+                "begin": price.length === 0 ? 0 : parseInt(Math.min(...price).toFixed(0)),
+                "end": price.length === 0 ? maxPrice : parseInt(Math.max(...price).toFixed(0)),
             }
         }
-        getOrders(data).then((res) => {
+        data.total_price.end && getOrders(data).then((res) => {
             if (res) {
                 setOrderList(res)
             }
         })
-    }, [chosenMinPrice, chosenMaxPrice])
+    }, [maxPrice, price])
+    console.log('ordersList :>> ', ordersList?.data?.data);
     return (
-        maxPrice && maxProduct ? (
+        maxPrice ? (
             <>
                 <Slider
                     rootStyle={sliderStyle /* inline styles for the outer div. Can also use className prop. */}
                     domain={[0, maxPrice]} /* initialize min and max value of slider */
                     values={[0, maxPrice]} /* create 2 handles, one start from 0 and one start from 100000 */
                     step={0.001}
+                    onChange={(value) => {
+                        setPrice(value)
+                    }}
                 >
                     <Rail>
                         {({ getRailProps }) => (
@@ -115,8 +89,6 @@ const RangeSlider = () => {
                                         source={source}
                                         target={target}
                                         getTrackProps={getTrackProps}
-                                        updateChosenMinPrice={updateChosenMinPrice}
-                                        updateChosenMaxPrice={updateChosenMaxPrice}
                                     />
                                 ))}
                             </div>
