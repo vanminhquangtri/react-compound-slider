@@ -20,18 +20,17 @@ const ValidatedForm = () => {
             <MyInput name="email" validations={{
                 isEmail: true,
                 maxLength: 10,
-            }} 
-            validationErrors={{
-                isEmail: 'You have to type valid email',
-                maxLength: 'You can not type in more than 50 characters',
             }}
-            required updateFormData={updateFormData}/>
-            <MyInput name="name" 
-            validations="minLength:1" required
-            validationErrors={{isAlpha: "Please fill in your name"}}
-            validationError="Please fill in your name"
-            updateFormData={updateFormData}/>
-            
+                validationErrors={{
+                    isEmail: 'You have to type valid email',
+                    maxLength: 'You can not type in more than 50 characters',
+                }}
+                required updateFormData={updateFormData} />
+            <MyInput name="name"
+                required
+                validationError="Please fill in your name"
+                updateFormData={updateFormData} />
+
             <button type="submit"> Submit </button>
         </Formsy>
     );

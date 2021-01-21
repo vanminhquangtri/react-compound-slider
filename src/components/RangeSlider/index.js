@@ -49,6 +49,7 @@ const RangeSlider = () => {
             }
         })
     }, [maxPrice, price])
+    window.localStorage.setItem("ordersList", ordersList)
     return (
         maxPrice ? (
             <>
